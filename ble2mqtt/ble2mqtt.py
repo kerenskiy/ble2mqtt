@@ -329,5 +329,5 @@ class Ble2Mqtt:
                 except aio.CancelledError:
                     raise
                 except Exception:
-                    _LOGGER.error('Disconnect from MQTT broker error')
+                    _LOGGER.error('Connect to MQTT broker error')
                 await aio.sleep(self._reconnection_interval)

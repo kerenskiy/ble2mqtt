@@ -2,6 +2,9 @@ import asyncio as aio
 import json
 import logging
 import os
+import sys
+
+sys.tracebacklimit=0
 
 from ble2mqtt.__version__ import VERSION
 from ble2mqtt.ble2mqtt import Ble2Mqtt
