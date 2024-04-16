@@ -19,7 +19,6 @@ LIGHT_VALUES = [
 ]
 LIGHT_READINGS = [911, 764, 741, 706, 645, 545, 196, 117, 24, 17, 0]
 
-
 def _interpolate(raw_value, values, raw_values):
     index = 0
     if raw_value > raw_values[0]:
@@ -43,13 +42,15 @@ def calculate_temperature(raw_value):
 
 
 def calculate_moisture(raw_value):
-    humidity = _interpolate(raw_value, MOISTURE_VALUES, MOISTURE_READINGS)
+    if FlowerMonitorMCLH09.RAWVAL == False:
+     humidity = _interpolate(raw_value, MOISTURE_VALUES, MOISTURE_READINGS)
 
     if humidity > 60.0:
         humidity = 60.0
     if humidity < 0.0:
         humidity = 0.0
-
+    else:
+     humidity = raw_value   
     return humidity
 
 
@@ -83,12 +84,13 @@ class FlowerMonitorMCLH09(Sensor):
     ACTIVE_CONNECTION_MODE = ConnectionMode.ACTIVE_POLL_WITH_DISCONNECT
     DEFAULT_RECONNECTION_SLEEP_INTERVAL = 300
     READ_DATA_IN_ACTIVE_LOOP = True
+    RAWVAL = False
 
     def __init__(self, mac, *args, **kwargs) -> None:
         super().__init__(mac, *args, **kwargs)
         self.RECONNECTION_SLEEP_INTERVAL = int(
-            kwargs.get('interval', self.DEFAULT_RECONNECTION_SLEEP_INTERVAL)
-        )
+            kwargs.get('interval', self.DEFAULT_RECONNECTION_SLEEP_INTERVAL))
+        self.RAWVAL = bool(kwargs.get('rawval'))
 
     @property
     def entities(self):
